@@ -7,6 +7,30 @@ import re
 from .models import CustomUser
 
 class CustomUserCreationForm(UserCreationForm):
+    password1 = forms.CharField(
+        label="Contraseña",
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Contraseña',
+                'required': True,
+                'pattern': '^(?=.*\d)(?=.*[A-Z])(?=.*[!#$%&?])[A-Za-z\d!#$%&?]{8,}$',
+                'title': 'La contraseña debe contener al menos 8 caracteres, 1 número, 1 letra mayúscula y 1 carácter especial.',
+            }
+        )
+    )
+    password2 = forms.CharField(
+        label="Confirmar contraseña",
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'form-control',
+                'placeholder': 'Confirmar contraseña',
+                'required': True,
+                'pattern': '^(?=.*\d)(?=.*[A-Z])(?=.*[!#$%&?])[A-Za-z\d!#$%&?]{8,}$',
+                'title': 'La contraseña debe contener al menos 8 caracteres, 1 número, 1 letra mayúscula y 1 carácter especial.',
+            }
+        )
+    )    
     class Meta:
         model = CustomUser
         fields = ['email', 'name', 'surname', 'control_number', 'age', 'tel', 'password1', 'password2']
@@ -47,20 +71,8 @@ class CustomUserCreationForm(UserCreationForm):
                 'class': 'form-control',
                 'placeholder': 'Teléfono',
                 'required': True,
-                'title': 'Ingresa tu teléfono',
-            }),
-            'password1': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Contraseña',
-                'required': True,
-                'pattern': '^(?=.*\d)(?=.*[A-Z])(?=.*[!#$%&?])[A-Za-z\d!#$%&?]{8,}$',
-                'title': 'La contraseña debe contener al menos 8 caracteres, 1 número, 1 letra mayúscula y 1 carácter especial.',
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Confirmar contraseña',
-                'required': True,
-                'title': 'Confirma tu contraseña',
+                'pattern': '^\d{10}$',
+                'title': 'El numero de telefono debe de ser de 10 numeros',
             }),
         }
 

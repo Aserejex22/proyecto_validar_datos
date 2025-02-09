@@ -5,5 +5,7 @@ class ErrorLog(models.Model):
     mensaje = models.TextField()
     fecha = models.DateTimeField(auto_now_add=True)
 
+
     def __str__(self):
+        
         return f"{self.codigo} - {self.mensaje}"

@@ -4,6 +4,7 @@ from .forms import CustomUserCreationForm, CustomUserLoginForm
 from django.contrib.auth.decorators import login_required
 import json
 from .message import message
+
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
@@ -14,6 +15,7 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'register.html', {'form': form})
+
 def login_view(request):
     if request.method == 'POST':
         form = CustomUserLoginForm(data=request.POST)
