@@ -10,7 +10,7 @@ class ProductoForm(forms.ModelForm):
         widgets = {
             'nombre': forms.TextInput(
                 attrs={
-                    'class': 'form-input',
+                    'class': 'form-control',
                     'placeholder': 'Ingrese el nombre del producto'
                 }
             ),
