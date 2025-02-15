@@ -33,14 +33,9 @@ class ProductoForm(forms.ModelForm):
             'imagen': 'URL de la imagen'
         }
         error_messages = {
-            'nombre': {
-                'required': 'Este campo es obligatorio'
-            },
-            'precio': {
-                'required': 'El precio no puede estar vacío',
-                'invalid': 'Ingresa un valor valido '
-            },
-            'imagen': {
-                'required': 'Este campo es obligatorio'
+            'precio':{
+                'required': 'El precio no puede estar vacio',
+                'invalid': 'Ingresa un valor valido'
             }
         }
+        
