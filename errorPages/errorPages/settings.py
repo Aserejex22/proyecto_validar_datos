@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app',
     'users',
+    'productos',
+    'categorias',
 ]
 
 MIDDLEWARE = [
@@ -83,7 +85,7 @@ WSGI_APPLICATION = 'errorPages.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Motor de base de datos
-        'NAME': 'mi_base_de_datos',           # Nombre de la base de datos
+        'NAME': 'personas',           # Nombre de la base de datos
         'USER': 'root',                 # Usuario de la base de datos
         'PASSWORD': 'root',           # Contraseña del usuario
         'HOST': 'localhost',                  # Dirección del servidor de BD
