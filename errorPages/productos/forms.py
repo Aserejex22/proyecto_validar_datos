@@ -6,7 +6,7 @@ from django import forms
 class ProductoForm(forms.ModelForm):
     class Meta:
         model = Producto
-        fields = ['nombre', 'precio', 'imagen']
+        fields = ['nombre', 'precio', 'imagen', 'proveedores']
         widgets = {
             'nombre': forms.TextInput(
                 attrs={
@@ -24,6 +24,12 @@ class ProductoForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': 'Ingrese la URL de la imagen del producto'
+                }
+            ),
+            'proveedores': forms.Select(
+                attrs={
+                    'class': 'form-input',
+                    'placeholder': 'Seleccione el proveedor del producto'
                 }
             )
         }

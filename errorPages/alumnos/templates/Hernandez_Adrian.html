@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Alumnos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Gestión de Alumnos</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card p-4">
+                    <form id="alumno-form">
+                        {% csrf_token %}
+                        <input type="hidden" id="alumno-id"> 
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="apellido" class="form-label">Apellido</label>
+                            <input type="text" class="form-control" id="apellido" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="edad" class="form-label">Edad</label>
+                            <input type="number" class="form-control" id="edad" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="matricula" class="form-label">Matrícula</label>
+                            <input type="text" class="form-control" id="matricula" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" class="form-control" id="correo" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>Lista de Alumnos</h3>
+                <table class="table table-striped table-bordered mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Edad</th>
+                            <th>Matrícula</th>
+                            <th>Correo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="alumnoTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const form = document.getElementById("alumno-form");
+            const alumnoIdField = document.getElementById("alumno-id");
+            const alumnoTableBody = document.getElementById("alumnoTableBody");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                let id = alumnoIdField.value;
+                let formData = {
+                    nombre: document.getElementById("nombre").value,
+                    apellido: document.getElementById("apellido").value,
+                    edad: document.getElementById("edad").value,
+                    matricula: document.getElementById("matricula").value,
+                    correo: document.getElementById("correo").value,
+                };
+
+                let method = id ? "PUT" : "POST";
+                let url = id ? `/alumnos/api/${id}/` : "/alumnos/api/";
+
+                let response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    form.reset();
+                    alumnoIdField.value = "";
+                    cargarAlumnos();
+                }
+            });
+
+            async function cargarAlumnos() {
+                let response = await fetch("/alumnos/api/");
+                let data = await response.json();
+                alumnoTableBody.innerHTML = "";
+                data.forEach(alumno => {
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${alumno.nombre}</td>
+                        <td>${alumno.apellido}</td>
+                        <td>${alumno.edad}</td>
+                        <td>${alumno.matricula}</td>
+                        <td>${alumno.correo}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editarAlumno(${alumno.id})">✏️</button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarAlumno(${alumno.id})">🗑️</button>
+                        </td>
+                    `;
+                    alumnoTableBody.appendChild(row);
+                });
+            }
+
+            window.editarAlumno = async (id) => {
+                let response = await fetch(`/alumnos/api/${id}/`);
+                let alumno = await response.json();
+                alumnoIdField.value = alumno.id;
+                document.getElementById("nombre").value = alumno.nombre;
+                document.getElementById("apellido").value = alumno.apellido;
+                document.getElementById("edad").value = alumno.edad;
+                document.getElementById("matricula").value = alumno.matricula;
+                document.getElementById("correo").value = alumno.correo;
+            };
+
+            window.eliminarAlumno = async (id) => {
+                let response = await fetch(`/alumnos/api/${id}/`, { method: "DELETE" });
+                if (response.ok) {
+                    cargarAlumnos();
+                } else {
+                    alert("Error al eliminar el alumno");
+                }
+            };
+
+            cargarAlumnos();
+        });
+    </script>
+</body>
+</html>

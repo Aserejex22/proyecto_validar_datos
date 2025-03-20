@@ -1,33 +1,24 @@
-from django.shortcuts import render, redirect
-from django.http import JsonResponse
 from .models import Producto
+from .serializers import ProductoSerializer
+from rest_framework import viewsets#Vamos a crear una vista de varias al mismo tiempo
+from rest_framework.renderers import JSONRenderer
 from .forms import ProductoForm
-
-#Metodo que devuelve el JSON
-def lista_productos(request):
-    productos = Producto.objects.all()
-
-    #Contruir una variable en formato de diccionario porque el JSONResponse lo requiere
-    data = [
-        {
-            #Objeto producto construido al aire
-            'nombre': p.nombre,
-            'precio': p.precio,
-            'imagen': p.imagen
-        }
-        for p in productos
-    ]
-
-    #Devolver la respuesta en JSON
-    return JsonResponse(data, safe=False)
-
-#Funcion para mandar a la vista del form
+from django.shortcuts import render
+    
 def agregar_producto(request):
-    if request.method == 'POST':
-        form = ProductoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('agregar')
-    else:
-        form = ProductoForm()
+    form = ProductoForm()
     return render(request, 'agregar.html', {'form': form})
+
+class ProductoViewSet(viewsets.ModelViewSet):
+    #1)Permitir sabes a que objeto hace referencia
+    queryset = Producto.objects.all()
+
+    #2)Serializar los objetos
+    serializer_class = ProductoSerializer
+
+    #3)Renderizar las respuestas
+    renderer_classes = [JSONRenderer]
+
+    #4)Establecer que metodos puedo usar
+    #http_method_names = ['GET', 'POST']
+

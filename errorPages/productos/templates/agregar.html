@@ -15,18 +15,78 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
+    <style>
+      @keyframes fadeIn {
+        /*Define la animacion */
+          from {opacity: 0; }
+          to {opacity: 1; }
+      }
+
+      @keyframes fadeOut {
+        /*Define la animacion */
+          from {opacity: 1; }
+          to {opacity: 0; }
+      }
+
+      @keyframes slide {
+        /*Define la animacion */
+          from { transform: translate(100%); }
+          to { transform: translate(0); }
+      }
+
+      @keyframes zoomIn {
+        /*Define la animacion */
+          from {
+            opacity: 0; 
+            transform: scale(0.5);
+          }
+          to {
+            opacity: 1; 
+            transform: scale(1);
+          }
+      }
+
+      @keyframes zoomOut {
+        /*Define la animacion */
+          from {
+            opacity: 1; 
+            transform: scale(1.0);
+          }
+          to {
+            opacity: 0; 
+            transform: scale(1.0);
+          }
+      }
+
+      .animate{
+        animation: zoomIn 0.5s forwards;
+      }
+
+    </style>
   </head>
-  <body>
+  <body class="animate">
     <h1>Nuevo producto</h1>
-    <form method="post">
+    <form method="post" id="producto-form" >
       {% csrf_token %} {{ form.as_p}}
       <button class="btn btn-primary" type="submit">Agregar</button>
     </form>
     <br>
     <h1>Lista de productos</h1>
     <div id="productos">
-
     </div>
+    <a href="https://www.utez.edu.mx/"> Salir del sitio</a>
+    <script>
+      document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function(event) {
+          event.preventDefault();
+          document.body.style.animation = 'zoomOut 5.0s forwards';
+          setTimeout(() => {
+            window.location.href = link.href;
+
+        }, 5000)
+      })
+    })
+    </script>
     <script>
         function cargarProductos(){
             fetch('/productos/api/get')
